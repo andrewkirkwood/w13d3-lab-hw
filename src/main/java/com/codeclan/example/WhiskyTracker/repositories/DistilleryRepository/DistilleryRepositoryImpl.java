@@ -31,4 +31,21 @@ public class DistilleryRepositoryImpl implements DistilleryRepositoryCustom {
         }
         return result;
     }
+
+    @Transactional
+    public List<Whisky> findAllDistilleriesWhichHaveWhiskeysByYear(int year){
+        List<Whisky> result = null;
+        Session session = entityManager.unwrap(Session.class);
+        try {
+            Criteria cr = session.createCriteria(Whisky.class);
+
+            cr.createAlias("whisky", "distilleryAlias");
+            cr.add(Restrictions.eq("distilleryAlias.region", region));
+            result =  cr.list();
+        }
+        catch(HibernateException ex) {
+            ex.printStackTrace();
+        }
+        return result;
+    }
 }
